@@ -1,18 +1,19 @@
-import telebot.types
 from telebot.types import ReplyKeyboardMarkup
 
-buttons = ['Поиск по фильмам', 'Поиск по актерам', 'Вывести рандомный фильм', 'Подборки']
+buttons = ['Поиск', 'Актеры', 'Подборки', 'Случайные фильмы']
 
-main_keyboard = ReplyKeyboardMarkup(
-    resize_keyboard=True
-)
+dict = {
+    'Поиск': ['Назад'],
+    'Актеры': ['null', 'null', 'Назад'],
+    'Подборки': ['Боевики', 'Драмы', 'Назад'],
+    'Случайные фильмы': ['null', 'null', 'Назад']
+}
 
-def buttons_to_keyboard():
-    for i in range(0, len(buttons), 2):
-        main_keyboard.row(buttons[i])
-        if i+1 < len(buttons):
-            main_keyboard.add(buttons[i+1])
-
-def make_keyboard():
-    buttons_to_keyboard()
-    return main_keyboard
+def make_keyboard(str=None):
+    keyboard = ReplyKeyboardMarkup(resize_keyboard=True)
+    btns = buttons
+    if str is not None:
+        btns = dict[str]
+    for i in range(len(btns)):
+        keyboard.add(btns[i])
+    return keyboard
