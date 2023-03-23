@@ -1,10 +1,8 @@
-from kinopoisk_dev import KinopoiskDev
+from kinopoisk.movie import Movie
 
-kino_token = open("kino_token.txt").readline()
-
-kp = KinopoiskDev(token=kino_token)
-
-def get_random_films(genre):
-    str = kp.find_many_movie()
-    print(str)
-    return str
+def get_film(name=None):
+    info = Movie(id=278229)
+    info.get_content('main_page')
+    print(info.year)
+    print(info.tagline)
+    print(info.rating)
