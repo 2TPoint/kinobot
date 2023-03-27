@@ -18,10 +18,10 @@ def get_film(name=None):
     return None
 
 
-def testfilms():
-    titles = ['Inception', 'Avatar', 'Game of Thrones', 'God Father']
-    for title in titles:
-        print(get_film(title))
+# def testfilms():
+#     titles = ['Inception', 'Avatar', 'Game of Thrones', 'God Father']
+#     for title in titles:
+#         print(get_film(title))
 
 
-testfilms()
+# testfilms()
