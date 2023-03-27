@@ -9,6 +9,7 @@ dict = {
     'Случайные фильмы': ['null', 'null', 'Назад']
 }
 
+
 def make_keyboard(str=None):
     keyboard = ReplyKeyboardMarkup(resize_keyboard=True)
     btns = buttons

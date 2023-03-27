@@ -73,7 +73,7 @@ def search_engine(msg, type):
         return
     info = ''
     km.get_film(msg.text)
-    #if object is None:
+    # if object is None:
     #    bot.send_message(msg.from_user.id, text=f"Фильм '{msg.text}' не найден")
     # info += object.name.en + f" ({object.year})" + '\n'
     # bot.send_message(msg.from_user.id, text=info)
