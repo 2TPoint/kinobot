@@ -24,6 +24,15 @@ main_keyboard = reply_keyboard.make_keyboard()  # клавиатура
 # команда старт
 @bot.message_handler(commands=['start'])
 def start(msg):
+    """
+    Обрабатывает команду '/start' от пользователя:
+        1. Добавляет id пользователя в базу данных бота
+        2. Создает клавиатуру для главного меню
+        3. Выводит приветствующий текст
+
+    :param msg: сообщение от пользователя
+    :return: ничего не вовзращает
+    """
     f = open("db.txt", 'r')
     data = ''
     for line in f.readlines():
@@ -46,6 +55,12 @@ def start(msg):
 
 @bot.message_handler(content_types=['text'])
 def main(msg):
+    """
+    Обрабатывает текст от пользователя, в завимости от текста вызывает соответствующие методы
+
+    :param msg: сообщение от пользователя
+    :return: ничего не вовзращает
+    """
     if msg.text == 'Актеры':
         search_actor(msg)
     if msg.text == 'Подборки':
@@ -58,6 +73,12 @@ def main(msg):
 
 # метод поиска
 def search(msg):
+    """
+    Выполняет фукнкцию перехода к меню поиска и вызова метода поискового движка
+
+    :param msg: сообщение от пользователя
+    :return: ничего не вовзращает
+    """
     main_keyboard = reply_keyboard.make_keyboard('Поиск')
     bot.send_message(msg.from_user.id, text="Вы находитесь в меню поиска")
     bot.send_message(msg.from_user.id,
@@ -68,15 +89,19 @@ def search(msg):
 
 # поиск пока не нажата кнопка назад
 def search_engine(msg, type):
+    """
+    Выполняет финкцию поискового движка, который обрабатывает полученный текст.
+
+    :param msg: сообщение от пользователя
+    :param type: тип поиска (фильм/сериал/актер)
+    :return: возвращает найденный объект
+    """
     if msg.text == 'Назад':
         menu_main(msg)
         return
     info = ''
     km.get_film(msg.text)
-    # if object is None:
-    #    bot.send_message(msg.from_user.id, text=f"Фильм '{msg.text}' не найден")
-    # info += object.name.en + f" ({object.year})" + '\n'
-    # bot.send_message(msg.from_user.id, text=info)
+    return km
 
 
 # метод основного меню
