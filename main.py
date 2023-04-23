@@ -2,6 +2,11 @@ import telebot
 from telebot import types
 import KinoMaster as km
 import reply_keyboard
+import parse_film
+import parse_actor
+from parse_film import *
+from parse_actor import *
+import wikipedia
 
 token = open("token.txt").readline()
 kino_token = open("kino_token.txt").readline()
@@ -96,13 +101,79 @@ def search_engine(msg, type):
     :param type: тип поиска (фильм/сериал/актер)
     :return: возвращает найденный объект
     """
+    message = str(msg.text)
+    wikipedia.set_lang("ru")
     if msg.text == 'Назад':
         menu_main(msg)
         return
-    info = ''
-    km.get_film(msg.text)
-    return km
+    if (type == "актер"):
+        keyboard = types.InlineKeyboardMarkup()
+        print(wikipedia.search(str(msg.text) + ' актер'))
+        message = str(msg.text)
+        message = message.split(" ")
+        message = ' '.join(message[1:]) + ', ' + message[0]
+        print(message)
+        if (str(message) in wikipedia.search(str(msg.text) + ' актер') or str(wikipedia.search(str(msg.text) + ' актер')[0]).find(message.split(", ")[1])):
+            acterURL = PersonURL().getPerson(wikipedia.page(str(msg.text)).url)
+            text = acterURL.getName() + '\t' + acterURL.getAge()
+            text += '\t' + str(acterURL.getFilms())
+            text += '\n' + str(acterURL.getAwards())
 
+            if (len(wikipedia.search(str(msg.text) + ' актер')) > 1):
+                wiki = wikipedia.search(str(msg.text) + ' актер')
+                for i in range(0, int(len(wiki) / 2 - 1)):
+                    keyboard.add(types.InlineKeyboardButton(text=wiki[i], callback_data='acter_' + wiki[i]))
+
+                text += '\n\n' + "Возможно данек\n"
+            else:
+                keyboard.add(types.InlineKeyboardButton(text="Открыть сайт"))
+            bot.send_photo(msg.from_user.id,
+                           acterURL.getPicture(),
+                           caption=text,
+                           reply_markup=keyboard)
+        else:
+            bot.send_message(msg.from_user.id,
+                           text="Некорректный запрос")
+    else:
+        keyboard = types.InlineKeyboardMarkup()
+        print(wikipedia.search(str(msg.text) + ' фильм'))
+        if (str(msg.text) in wikipedia.search(str(msg.text) + ' фильм')):
+            filmURL = FilmURL().getFilm(wikipedia.page(str(msg.text)).url)
+            text = filmURL.getTitle() + '\t' + filmURL.getDate()
+            text += '\t' + str(filmURL.getTime())
+            text += '\n' + str(filmURL.getActors())
+            print(filmURL.getPicture())
+
+            if (len(wikipedia.search(str(msg.text) + ' фильм')) > 1):
+                wiki = wikipedia.search(str(msg.text) + ' фильм')
+                for i in range(0, int(len(wiki) / 2 - 1)):
+                    keyboard.add(types.InlineKeyboardButton(text=wiki[i], callback_data='film_' + wiki[i]))
+
+                text+= '\n\n' + "Также были найдены фильмы\n"
+            else:
+                keyboard.add(types.InlineKeyboardButton(text="Открыть сайт"))
+            bot.send_photo(msg.from_user.id,
+                           filmURL.getPicture(),
+                            caption=text,
+                            reply_markup=keyboard)
+
+        else:
+            bot.send_photo(msg.from_user.id,
+                           open("img_1.png", 'rb'),
+                           caption="Возможно вы имели в виду:\n" +
+                        str(wikipedia.search(str(msg.text) + ' фильм')[:5])
+                           )
+    bot.register_next_step_handler(msg, search_engine, type)
+
+
+@bot.callback_query_handler(func=lambda call: True)
+def ans(call):
+    kb = types.InlineKeyboardMarkup()
+    cid = call.message.chat.id
+    mid = call.message.message_id
+    if call.data[:5] == "film_":
+        bot.send_message(call.message.chat.id, 'И что дальше?')
+        # bot.edit_message_text(chat_id=cid, message_id=mid, text='New Text', reply_markup=kb, parse_mode='Markdown')
 
 # метод основного меню
 def menu_main(msg):
