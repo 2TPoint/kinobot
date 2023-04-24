@@ -2,13 +2,14 @@ import requests
 from bs4 import BeautifulSoup
 
 
-class PersonURL:
-    class __Person:
+class ActorURL:
+    class __Actor:
         def isExist(self):
             if self.__bs4URL is None:
                 return False
             else:
                 return True
+
         __months = ['января', 'февраля', 'марта', 'апреля', 'мая',
                     'июня', 'июля', 'августа', 'сентября', 'октября',
                     'ноября', 'декабря']
@@ -51,11 +52,11 @@ class PersonURL:
 
         def getFilms(self):
             try:
-                all_films = self.__bs4URL.find_all('a')
+                page = self.__bs4URL.find('table', class_='wikitable sortable')
                 films = set()
-                for i in all_films:
-                    if str(i).__contains__('(фильм)'):
-                        films.add(i.text)
+                for film in page.find_all('a'):
+                    if str(film).__contains__('фильм') or str(film).__contains__('телесериал'):
+                        films.add(film.text)
                 return list(films)
             except Exception:
                 return list()
@@ -67,14 +68,13 @@ class PersonURL:
                 for i in all:
                     if str(i).__contains__("P166"):
                         for award in i:
-                            if award.text != '' and not award.text.__contains__('(') and not award.text.__contains__('»') \
+                            if award.text != '' and not award.text.__contains__('(') and not award.text.__contains__(
+                                    '»') \
                                     and not award.text.__contains__('«'): awards.add(award.text)
                         return awards
                 return list(awards)
             except Exception:
                 return list()
 
-    default_url = 'https://ru.wikipedia.org/wiki/'
-
     def getPerson(self, fname):
-        return self.__Person(fname)
+        return self.__Actor(fname)
