@@ -1,6 +1,0 @@
-setup.py
-kinobot_package.egg-info/PKG-INFO
-kinobot_package.egg-info/SOURCES.txt
-kinobot_package.egg-info/dependency_links.txt
-kinobot_package.egg-info/requires.txt
-kinobot_package.egg-info/top_level.txt
