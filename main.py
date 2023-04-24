@@ -141,7 +141,6 @@ def search_engine(msg, type):
             if (len(wikipedia.search(str(msg.text) + ' фильм')) > 1):
                 wiki = wikipedia.search(str(msg.text) + ' фильм')
                 for i in range(0, int(len(wiki) / 2 - 1)):
-
                     keyboard.add(types.InlineKeyboardButton(text=wiki[i], callback_data='film_' + wiki[i]))
 
                 reply_text += '\n\n' + "Также были найдены фильмы\n"
