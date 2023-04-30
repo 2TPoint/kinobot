@@ -125,7 +125,6 @@ coverage.xml
 .pytest_cache/
 cover/
 
-
 # Django stuff:
 *.log
 local_settings.py
