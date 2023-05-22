@@ -1,6 +1,5 @@
 import telebot
 from telebot import types
-import KinoMaster as km
 import reply_keyboard
 import parse_film
 import parse_actor
@@ -39,10 +38,12 @@ class MiniActor:
 
 page = 1
 
+tok = 'e41fc368-426a-459e-b16e-82e2a231a322'
+
 token = open("token.txt").readline()
 kino_token = open("kino_token.txt").readline()
 
-api_client = KinopoiskApiClient("b6e6a2c3-d103-49c0-97f4-414963a75e13")
+api_client = KinopoiskApiClient(tok)
 
 bot = telebot.TeleBot(token)  # инициализируем бота
 main_keyboard = reply_keyboard.make_keyboard()  # клавиатура
@@ -299,7 +300,7 @@ def menu_collections(msg):
 def getMovies(url):
     headers = {
         "Content-Type": "application/json",
-        "X-API-KEY": "b6e6a2c3-d103-49c0-97f4-414963a75e13",
+        "X-API-KEY": tok,
     }
     resp = requests.get(url, headers=headers)
     respData = resp.json()
@@ -420,7 +421,7 @@ def getGenrePos(text):
 def getActors(url):
     headers = {
         "Content-Type": "application/json",
-        "X-API-KEY": "b6e6a2c3-d103-49c0-97f4-414963a75e13",
+        "X-API-KEY": tok,
     }
     resp = requests.get(url, headers=headers)
     respData = resp.json()
@@ -534,13 +535,5 @@ def search_actor_going(msg):
     else:
         bot.send_message(msg.from_user.id, text=f"По запросу: \'{msg.text}\' не было найдено ни одного актера.")
     bot.register_next_step_handler(msg, search_actor_going)
-
-def make_random_film_list(msg):
-    s = ''
-    movies = km.get_random_films()
-    for movie in movies:
-        s += movie.title + '\n'
-    bot.send_message(msg.from_user.id, text=s)
-
 
 bot.infinity_polling()  # бесконечная работа бота
